@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💘 나만의 이상형 찾기 테스트 💘</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #fdf2f8;
+            color: #334155;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(244, 63, 94, 0.15);
+            padding: 30px 24px;
+            text-align: center;
+        }
+
+        /* 공통 헤더 */
+        h1 {
+            color: #e11d48;
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        /* 프로그레스 바 */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #ffe4e6;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: #fb7185;
+            transition: width 0.3s ease;
+        }
+
+        /* 버튼 스타일 */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            background-color: #ffffff;
+            border: 2px solid #fecdd3;
+            border-radius: 14px;
+            color: #475569;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .btn:hover {
+            background-color: #fff1f2;
+            border-color: #fb7185;
+            color: #e11d48;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background-color: #fb7185;
+            color: white;
+            border: none;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-top: 15px;
+        }
+
+        .btn-primary:hover {
+            background-color: #f43f5e;
+            color: white;
+        }
+
+        /* 화면 박스 제어 */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* 질문 박스 */
+        .question-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 20px;
+            word-break: keep-all;
+        }
+
+        /* 결과 화면 */
+        .result-badge {
+            display: inline-block;
+            background-color: #ffe4e6;
+            color: #e11d48;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .result-title {
+            font-size: 1.6rem;
+            color: #9f1239;
+            margin-bottom: 15px;
+        }
+
+        .result-box {
+            background-color: #fff1f2;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        .result-box p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #4c0519;
+            font-size: 0.95rem;
+        }
+
+        .result-box p:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 진행바 -->
+    <div class="progress-bar" id="progressBar">
+        <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- 1. 시작 화면 -->
+    <div id="startScreen" class="screen active">
+        <h1>💘 나만의 이상형 찾기</h1>
+        <p class="subtitle">몇 가지 선택을 통해 당신과 가장 잘 맞는<br>완벽한 이상형의 타입을 찾아드립니다!</p>
+        <button class="btn btn-primary" onclick="startTest()">테스트 시작하기</button>
+    </div>
+
+    <!-- 2. 질문 화면 -->
+    <div id="questionScreen" class="screen">
+        <div class="question-title" id="questionTitle">질문 내용이 들어갑니다.</div>
+        <div id="optionsContainer">
+            <!-- 선택지 버튼이 동적으로 삽입됩니다 -->
+        </div>
+    </div>
+
+    <!-- 3. 결과 화면 -->
+    <div id="resultScreen" class="screen">
+        <span class="result-badge">매칭 완료!</span>
+        <h2 class="result-title" id="resultTitle">결과 타이틀</h2>
+        <div class="result-box">
+            <p id="resultDesc1"></p>
+            <p id="resultDesc2"></p>
+        </div>
+        <button class="btn btn-primary" onclick="restartTest()">다시 테스트하기</button>
+    </div>
+</div>
+
+<script>
+    // 질문 데이터
+    const questions = [
+        {
+            title: "1. 주말을 보낼 때 당신이 선호하는 스타일은?",
+            options: [
+                { text: "야외 활동이나 핫플, 사람들과의 모임", type: "E", score: 2 },
+                { text: "집에서 편하게 아늑한 영화나 힐링", type: "I", score: 2 }
+            ]
+        },
+        {
+            title: "2. 연인과의 데이트 중 더 설레는 코스는?",
+            options: [
+                { text: "테마파크, 액티비티, 핫한 맛집 탐방", type: "A", score: 2 },
+                { text: "조용한 카페, 드라이브, 영화관 데이트", type: "C", score: 2 }
+            ]
+        },
+        {
+            title: "3. 연인에게 가장 기대하는 바람직한 모습은?",
+            options: [
+                { text: "자기 일을 열정적으로 하고 배울 점이 있는 사람", type: "A", score: 2 },
+                { text: "내 말을 잘 들어주고 따뜻하게 공감해 주는 사람", type: "C", score: 2 }
+            ]
+        },
+        {
+            title: "4. 새로운 장소나 예기치 않은 상황에서의 행동은?",
+            options: [
+                { text: "먼저 앞장서서 리드하고 분위기를 주도하는 모습", type: "E", score: 2 },
+                { text: "차분하게 옆에서 배려해 주고 챙겨주는 모습", type: "C", score: 1 }
+            ]
+        }
+    ];
+
+    // 점수 측정용 데이터 (E: 외향, I: 내향, A: 활동/성장, C: 다정/편안)
+    let scores = { E: 0, I: 0, A: 0, C: 0 };
+    let currentQuestionIndex = 0;
+
+    // 시작 함수
+    function startTest() {
+        scores = { E: 0, I: 0, A: 0, C: 0 };
+        currentQuestionIndex = 0;
+        
+        document.getElementById('startScreen').classList.remove('active');
+        document.getElementById('resultScreen').classList.remove('active');
+        document.getElementById('questionScreen').classList.add('active');
+        document.getElementById('progressBar').style.display = 'block';
+        
+        showQuestion();
+    }
+
+    // 질문 표시 함수
+    function showQuestion() {
+        const q = questions[currentQuestionIndex];
+        document.getElementById('questionTitle').innerText = q.title;
+        
+        // 프로그레스 바 업데이트
+        const progressPercent = ((currentQuestionIndex + 1) / questions.length) * 100;
+        document.getElementById('progress').style.width = progressPercent + '%';
+
+        // 선택지 버튼 생성
+        const optionsContainer = document.getElementById('optionsContainer');
+        optionsContainer.innerHTML = '';
+        
+        q.options.forEach(option => {
+            const button = document.createElement('button');
+            button.className = 'btn';
+            button.innerText = option.text;
+            button.onclick = () => selectOption(option.type, option.score);
+            optionsContainer.appendChild(button);
+        });
+    }
+
+    // 선택지 클릭 처리
+    function selectOption(type, score) {
+        scores[type] += score;
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
+            showQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    // 결과 출력 함수
+    function showResult() {
+        document.getElementById('questionScreen').classList.remove('active');
+        document.getElementById('progressBar').style.display = 'none';
+        document.getElementById('resultScreen').classList.add('active');
+
+        const titleElem = document.getElementById('resultTitle');
+        const desc1Elem = document.getElementById('resultDesc1');
+        const desc2Elem = document.getElementById('resultDesc2');
+
+        // 점수에 따른 판정 로직
+        if (scores.E >= 3 && scores.A >= 2) {
+            titleElem.innerText = "✨ 열정적인 에너자이저 리더형";
+            desc1Elem.innerText = "• 에너지가 넘치고 추진력 있게 데이트를 리드하는 사람에게 커다란 매력을 느낍니다.";
+            desc2Elem.innerText = "• 함께 새로운 것을 경험하고 활동적인 인플루언서 스타일과 가장 잘 어울립니다.";
+        } else if (scores.C >= 3 && scores.I >= 2) {
+            titleElem.innerText = "✨ 다정다감 힐링 케어형";
+            desc1Elem.innerText = "• 세심하고 따뜻하며 항상 내 편이 되어주는 아늑한 사람에게 끌립니다.";
+            desc2Elem.innerText = "• 조용한 곳에서 둘만의 깊은 대화를 나누며 일상을 공유할 때 큰 행복을 느낍니다.";
+        } else if (scores.A >= 3) {
+            titleElem.innerText = "✨ 자기관리 철저한 갓생형";
+            desc1Elem.innerText = "• 자신의 목표가 뚜렷하고 열정적으로 삶을 살아가는 동기부여형 인재에게 매력을 느낍니다.";
+            desc2Elem.innerText = "• 서로의 성장을 응원하고 건강한 자극을 주는 서포터 관계를 선호합니다.";
+        } else {
+            titleElem.innerText = "✨ 티키타카 유쾌한 친구형";
+            desc1Elem.innerText = "• 유머 감각이 잘 맞고 함께 있으면 시간 가는 줄 모르는 편안한 사람에게 끌립니다.";
+            desc2Elem.innerText = "• 장난치듯 편안하게 지내며 소소한 행복을 나눌 수 있는 연애가 어울립니다.";
+        }
+    }
+
+    // 다시 시작
+    function restartTest() {
+        document.getElementById('resultScreen').classList.remove('active');
+        document.getElementById('startScreen').classList.add('active');
+    }
+</script>
+
+</body>
+</html>

@@ -3,316 +3,718 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💘 나만의 이상형 찾기 테스트 💘</title>
+    <title>TRANSIT HEART | 완벽 이상형 찾기</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Pretendard:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg-dark: #0f0709;
+            --bg-card: rgba(28, 14, 19, 0.65);
+            --border-card: rgba(244, 114, 182, 0.18);
+            --primary-pink: #f43f5e;
+            --rose-accent: #fb7185;
+            --text-title: #fff1f2;
+            --text-sub: #9f8a93;
+            --glass-glow: 0 0 35px rgba(244, 63, 94, 0.12);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #fdf2f8;
-            color: #334155;
+            background: radial-gradient(circle at 50% 20%, #2a0c16 0%, var(--bg-dark) 80%);
+            color: var(--text-title);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            overflow-x: hidden;
         }
 
-        .container {
-            background-color: #ffffff;
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border-card);
             width: 100%;
-            max-width: 480px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(244, 63, 94, 0.15);
-            padding: 30px 24px;
-            text-align: center;
+            max-width: 500px;
+            border-radius: 28px;
+            padding: 36px 28px;
+            box-shadow: var(--glass-glow), 0 30px 60px rgba(0, 0, 0, 0.6);
+            position: relative;
         }
 
-        /* 공통 헤더 */
-        h1 {
-            color: #e11d48;
-            font-size: 1.6rem;
-            margin-bottom: 10px;
-        }
-
-        p.subtitle {
-            color: #64748b;
-            font-size: 0.95rem;
-            margin-bottom: 25px;
-        }
-
-        /* 프로그레스 바 */
-        .progress-bar {
+        .progress-wrapper {
             width: 100%;
-            height: 8px;
-            background-color: #ffe4e6;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 4px;
-            margin-bottom: 25px;
+            margin-bottom: 24px;
             overflow: hidden;
             display: none;
         }
 
-        .progress {
+        .progress-bar {
             height: 100%;
             width: 0%;
-            background-color: #fb7185;
-            transition: width 0.3s ease;
+            background: linear-gradient(90deg, var(--primary-pink), var(--rose-accent));
+            transition: width 0.35s ease;
         }
 
-        /* 버튼 스타일 */
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 16px 20px;
+        .brand-tag {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.25em;
+            color: var(--rose-accent);
+            text-transform: uppercase;
             margin-bottom: 12px;
-            background-color: #ffffff;
-            border: 2px solid #fecdd3;
-            border-radius: 14px;
-            color: #475569;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-            line-height: 1.4;
-        }
-
-        .btn:hover {
-            background-color: #fff1f2;
-            border-color: #fb7185;
-            color: #e11d48;
-            transform: translateY(-2px);
-        }
-
-        .btn-primary {
-            background-color: #fb7185;
-            color: white;
-            border: none;
+            display: block;
             text-align: center;
-            font-size: 1.1rem;
-            margin-top: 15px;
         }
 
-        .btn-primary:hover {
-            background-color: #f43f5e;
-            color: white;
+        h1.main-title {
+            font-size: 1.45rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            text-align: center;
+            word-break: keep-all;
         }
 
-        /* 화면 박스 제어 */
+        .sub-desc {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            font-weight: 300;
+            line-height: 1.6;
+            margin-bottom: 28px;
+            text-align: center;
+            word-break: keep-all;
+        }
+
         .screen {
             display: none;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .screen.active {
             display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        /* 질문 박스 */
-        .question-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 20px;
+        /* 프로필 레이아웃 */
+        .section-label {
+            font-size: 0.85rem;
+            color: var(--rose-accent);
+            margin-bottom: 10px;
+            font-weight: 500;
+            display: block;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .select-btn {
+            padding: 18px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            color: var(--text-title);
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+        }
+
+        .select-btn.selected {
+            background: rgba(244, 63, 94, 0.2);
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* 질문 옵션 버턴 */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .opt-btn {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            color: var(--text-title);
+            font-size: 0.92rem;
+            line-height: 1.45;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
             word-break: keep-all;
         }
 
-        /* 결과 화면 */
-        .result-badge {
-            display: inline-block;
-            background-color: #ffe4e6;
-            color: #e11d48;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
+        .opt-btn:hover {
+            background: rgba(244, 63, 94, 0.15);
+            border-color: var(--rose-accent);
+            transform: translateY(-2px);
         }
 
-        .result-title {
-            font-size: 1.6rem;
-            color: #9f1239;
-            margin-bottom: 15px;
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary-pink), #e11d48);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 25px rgba(244, 63, 94, 0.35);
+            margin-top: 10px;
         }
 
+        .btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
+        }
+
+        /* 결과 창 스타일 */
         .result-box {
-            background-color: #fff1f2;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
             padding: 20px;
-            border-radius: 12px;
-            text-align: left;
-            margin-bottom: 25px;
+            margin-top: 18px;
         }
 
-        .result-box p {
-            margin-bottom: 10px;
-            line-height: 1.6;
-            color: #4c0519;
-            font-size: 0.95rem;
+        .img-wrapper {
+            width: 100%;
+            height: 320px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .result-box p:last-child {
-            margin-bottom: 0;
+        .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .celeb-tag {
+            font-size: 0.88rem;
+            color: var(--rose-accent);
+            background: rgba(244, 63, 94, 0.12);
+            padding: 8px 14px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 16px;
+            border: 1px solid rgba(244, 63, 94, 0.2);
+        }
+
+        .type-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .desc-text {
+            font-size: 0.88rem;
+            color: var(--text-sub);
+            line-height: 1.7;
+            font-weight: 300;
+            word-break: keep-all;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 16px 0;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- 진행바 -->
-    <div class="progress-bar" id="progressBar">
-        <div class="progress" id="progress"></div>
+<div class="card">
+    <div class="progress-wrapper" id="progressWrapper">
+        <div class="progress-bar" id="progressBar"></div>
     </div>
 
-    <!-- 1. 시작 화면 -->
-    <div id="startScreen" class="screen active">
-        <h1>💘 나만의 이상형 찾기</h1>
-        <p class="subtitle">몇 가지 선택을 통해 당신과 가장 잘 맞는<br>완벽한 이상형의 타입을 찾아드립니다!</p>
-        <button class="btn btn-primary" onclick="startTest()">테스트 시작하기</button>
-    </div>
+    <!-- 1페이지: 프로필 설정 (성별 & 나이) -->
+    <div id="step1" class="screen active">
+        <span class="brand-tag">TRANSIT HEART</span>
+        <h1 class="main-title">나의 세부 프로필 설정</h1>
+        <p class="sub-desc">당신의 연령과 성별에 맞춰<br>가장 정확한 이상형 연예인을 분석합니다.</p>
 
-    <!-- 2. 질문 화면 -->
-    <div id="questionScreen" class="screen">
-        <div class="question-title" id="questionTitle">질문 내용이 들어갑니다.</div>
-        <div id="optionsContainer">
-            <!-- 선택지 버튼이 동적으로 삽입됩니다 -->
+        <span class="section-label">1. 당신의 성별은?</span>
+        <div class="grid-2">
+            <div class="select-btn" id="gF" onclick="setGender('F')">여성 (남성 매칭)</div>
+            <div class="select-btn" id="gM" onclick="setGender('M')">남성 (여성 매칭)</div>
         </div>
+
+        <span class="section-label">2. 당신의 연령대는?</span>
+        <div class="grid-2">
+            <div class="select-btn" id="a1020" onclick="setAge('1020')">10대 ~ 20대 초반</div>
+            <div class="select-btn" id="a2030" onclick="setAge('2030')">20대 후반 ~ 30대 이상</div>
+        </div>
+
+        <button class="btn-primary" onclick="startQuestions()">이상형 찾기 시작</button>
     </div>
 
-    <!-- 3. 결과 화면 -->
-    <div id="resultScreen" class="screen">
-        <span class="result-badge">매칭 완료!</span>
-        <h2 class="result-title" id="resultTitle">결과 타이틀</h2>
+    <!-- 2페이지부터: 18개 질문 순차 진행 -->
+    <div id="stepQuestions" class="screen">
+        <span class="brand-tag" id="qNum">01 / 18</span>
+        <h1 class="main-title" id="qTitle">질문 제목</h1>
+        <div class="options-list" id="optsContainer"></div>
+    </div>
+
+    <!-- 최종 페이지: 분석 결과 -->
+    <div id="stepResult" class="screen">
+        <span class="brand-tag">MATCHING ANALYSIS</span>
+        <h1 class="main-title" style="margin-bottom: 20px;">당신의 운명적 이상형 분석 결과</h1>
+
         <div class="result-box">
-            <p id="resultDesc1"></p>
-            <p id="resultDesc2"></p>
+            <div class="img-wrapper">
+                <img id="resImg" src="" alt="이상형 예시 이미지">
+            </div>
+            <div class="celeb-tag" id="resCeleb">대표 연예인 라인업</div>
+            <div class="type-title" id="resTitle">이상형 타이틀</div>
+            <div class="divider"></div>
+            <div class="desc-text" id="resDesc">상세 설명이 표출됩니다.</div>
         </div>
-        <button class="btn btn-primary" onclick="restartTest()">다시 테스트하기</button>
+
+        <button class="btn-primary" onclick="resetTest()" style="margin-top: 20px;">다시 테스트하기</button>
     </div>
 </div>
 
 <script>
-    // 질문 데이터
-    const questions = [
-        {
-            title: "1. 주말을 보낼 때 당신이 선호하는 스타일은?",
-            options: [
-                { text: "야외 활동이나 핫플, 사람들과의 모임", type: "E", score: 2 },
-                { text: "집에서 편하게 아늑한 영화나 힐링", type: "I", score: 2 }
-            ]
+    let userGender = 'F';
+    let userAge = '1020';
+    let currentQ = 0;
+    let scores = { SOFT: 0, CHIC: 0, MATURE: 0, ENERGETIC: 0 };
+
+    function setGender(g) {
+        userGender = g;
+        document.getElementById('gF').classList.toggle('selected', g === 'F');
+        document.getElementById('gM').classList.toggle('selected', g === 'M');
+    }
+
+    function setAge(a) {
+        userAge = a;
+        document.getElementById('a1020').classList.toggle('selected', a === '1020');
+        document.getElementById('a2030').classList.toggle('selected', a === '2030');
+    }
+
+    setGender('F');
+    setAge('1020');
+
+    // 18개 구체적 질문 데이터셋
+    function getQuestionList() {
+        const isF = userGender === 'F';
+        return [
+            {
+                q: isF ? "선호하는 남성의 이상적인 키(Height)는?" : "선호하는 여성의 이상적인 키(Height)는?",
+                a: isF ? [
+                    { text: "180cm 이상! 크고 듬직하게 폭 안길 수 있는 키", s: { MATURE: 2, CHIC: 1 } },
+                    { text: "175cm~180cm 부근의 깔끔하고 슬림한 피지컬", s: { SOFT: 1, CHIC: 2 } },
+                    { text: "나와 눈높이가 잘 맞고 따뜻한 편안한 키", s: { SOFT: 2 } },
+                    { text: "키보다는 비율과 전체적인 패션 핏이 중요함", s: { ENERGETIC: 2 } }
+                ] : [
+                    { text: "168cm 이상! 비율 좋고 스타일리시한 모델 핏", s: { CHIC: 2 } },
+                    { text: "162cm~167cm 부근의 이상적이고 예쁜 비율", s: { MATURE: 2 } },
+                    { text: "160cm 이하! 품에 쏙 들어오는 아담하고 귀여운 키", s: { SOFT: 2 } },
+                    { text: "키는 무관하며 유쾌하고 시원시원한 매력이 우선", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "가장 선호하는 상대방의 얼굴 상(비주얼 이미지)은?",
+                a: [
+                    { text: "순하고 부드러운 멍뭉미/두부상 (강아지상)", s: { SOFT: 2 } },
+                    { text: "날카롭고 세련된 도도한 냉미남/냉미녀 (고양이상)", s: { CHIC: 2 } },
+                    { text: "성숙하고 깊이감 있는 뚜렷한 이목구비 (사슴/공룡상)", s: { MATURE: 2 } },
+                    { text: "웃을 때 상큼하고 긍정 에너지가 퍼지는 비타민상", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "상대방의 평소 패션 스타일로 선호하는 것은?",
+                a: [
+                    { text: "깔끔하고 모던한 셔츠, 슬랙스, 수트 룩", s: { MATURE: 2 } },
+                    { text: "트렌디하고 감각적인 스트릿/세련된 캐주얼", s: { CHIC: 2 } },
+                    { text: "편안하면서도 센스 있는 데일리 꾸안꾸 룩", s: { SOFT: 2 } },
+                    { text: "스포티하고 활기찬 아웃도어/블록코어 룩", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "상대방의 분위기 중 가장 설레는 순간은?",
+                a: [
+                    { text: "나를 보며 사르르 지어주는 따뜻한 눈웃음", s: { SOFT: 2 } },
+                    { text: "자기 일에 몰입할 때의 시크하고 집중한 표정", s: { CHIC: 2 } },
+                    { text: "말없이 묵묵히 나를 배려하고 챙겨주는 진중함", s: { MATURE: 2 } },
+                    { text: "장난기 가득한 웃음으로 내 기분을 풀어줄 때", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "연락 문제에 대한 당신의 이상적인 기준은?",
+                a: [
+                    { text: "소소한 일상도 꾸준히 공유하는 다정한 연락", s: { SOFT: 2 } },
+                    { text: "각자 일할 땐 집중하고 할 때만 확실히 하는 깔끔함", s: { CHIC: 2 } },
+                    { text: "서로 신뢰를 바탕으로 여유롭게 주고받는 방식", s: { MATURE: 2 } },
+                    { text: "심심할 틈 없이 티키타카 유쾌한 대화 체계", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "첫 데이트로 가장 원해왔던 코스는?",
+                a: [
+                    { text: "한적한 골목 카페와 고즈넉한 공원 산책", s: { SOFT: 2 } },
+                    { text: "감각적인 전시회나 트렌디한 핫플 팝업스토어", s: { CHIC: 2 } },
+                    { text: "파인다이닝이나 야경이 멋진 분위기 있는 와인바", s: { MATURE: 2 } },
+                    { text: "드라이브, 액티비티 등 활동적이고 신나는 코스", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "상대방의 가장 매력적인 '음성/목소리' 스타일은?",
+                a: [
+                    { text: "부드럽고 귓가에 차분하게 감기는 미성", s: { SOFT: 2 } },
+                    { text: "낮고 묵직해 안정감을 주는 울림 있는 중저음", s: { MATURE: 2 } },
+                    { text: "지적이고 똑부러지는 톤의 명확한 목소리", s: { CHIC: 2 } },
+                    { text: "밝고 생기 넘쳐 듣기만 해도 기분 좋은 목소리", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "연인 사이에 갈등이 생겼을 때 바라는 상대방의 태도는?",
+                a: [
+                    { text: "먼저 다가와 따뜻한 손길로 마음을 녹여주기", s: { SOFT: 2 } },
+                    { text: "감정 소비 없이 원인을 냉정하고 솔직하게 정리하기", s: { CHIC: 2 } },
+                    { text: "차분히 시간을 갖고 서로 이해하려 대화하기", s: { MATURE: 2 } },
+                    { text: "기분 전환을 도와주며 쿨하게 털어버리기", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "상대방의 성격 중 가장 용납하기 힘든 부분은?",
+                a: [
+                    { text: "차가운 말투와 무심한 태도", s: { SOFT: 2 } },
+                    { text: "자기관리 안 되고 우유부단한 모습", s: { MATURE: 2 } },
+                    { text: "지나치게 진지해서 같이 있으면 지루한 분위기", s: { ENERGETIC: 2 } },
+                    { text: "센스 없고 트렌드에 지나치게 뒤처지는 스타일", s: { CHIC: 2 } }
+                ]
+            },
+            {
+                q: "연인과 공유하고 싶은 주말의 일상은?",
+                a: [
+                    { text: "집에서 함께 영화 보고 맛있는 걸 만들어 먹는 힐링", s: { SOFT: 2 } },
+                    { text: "예쁜 옷 맞춰 입고 스냅 사진 남기러 나가는 하루", s: { CHIC: 2 } },
+                    { text: "서로 자기계발이나 책을 읽으며 여유를 즐기는 시간", s: { MATURE: 2 } },
+                    { text: "새로운 취미나 운동, 여행을 떠나는 다이나믹함", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "어떤 매너/행동에 가장 심장이 뛰시나요?",
+                a: [
+                    { text: "내가 지나치듯 말한 취향을 기억하고 챙겨줄 때", s: { SOFT: 2 } },
+                    { text: "문 열어주기, 차도 쪽으로 걸어가기 등 몸에 밴 매너", s: { MATURE: 2 } },
+                    { text: "어디서나 당당하고 자신감 있게 행동하는 아우라", s: { CHIC: 2 } },
+                    { text: "어색한 상황도 유쾌하게 풀어나가는 위트", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "선호하는 연애의 속도감은 어떤 편인가요?",
+                a: [
+                    { text: "천천히 서로를 알아가며 스며드는 잔잔한 연애", s: { SOFT: 2 } },
+                    { text: "첫눈에 강렬하게 끌려 빠르게 타오르는 연애", s: { CHIC: 2 } },
+                    { text: "서로의 비전과 가치관을 맞춰가는 신중한 연애", s: { MATURE: 2 } },
+                    { text: "친구처럼 즐겁게 시작해 거침없이 발전하는 연애", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "상대방의 '손'이나 '피지컬'에서 느껴지는 이상형 조건은?",
+                a: [
+                    { text: "길고 섬세하여 보기만 해도 다정해 보이는 손", s: { SOFT: 2 } },
+                    { text: "손마디가 굵고 핏줄이 드러나 섹시함이 느껴지는 손", s: { CHIC: 2 } },
+                    { text: "어깨가 넓고 두터워 잡았을 때 안정감을 주는 손", s: { MATURE: 2 } },
+                    { text: "활동적인 움직임과 잔근육이 매력적인 체형", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "연인이 나에게 표현해주길 바라는 방식은?",
+                a: [
+                    { text: "아침저녁으로 전해주는 따뜻한 애정 표현", s: { SOFT: 2 } },
+                    { text: "말보다는 행동이나 서프라이즈 선물로 보여주는 방식", s: { CHIC: 2 } },
+                    { text: "진심 어린 눈빛과 묵직한 확신을 주는 고백", s: { MATURE: 2 } },
+                    { text: "아낌없는 칭찬과 리액션으로 자존감 세워주기", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "상대방의 SNS나 인스타그램 스타일 취향은?",
+                a: [
+                    { text: "감성적인 풍경이나 일상 소소함을 올리는 피드", s: { SOFT: 2 } },
+                    { text: "전신 샷, 힙한 공간, 세련된 오프핏이 가득한 피드", s: { CHIC: 2 } },
+                    { text: "SNS를 과하게 하지 않고 가끔씩 올리는 담백함", s: { MATURE: 2 } },
+                    { text: "친구들과 유쾌하게 찍은 스냅이나 운동 인증 피드", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "상대방과 의견이 다를 때 통했으면 하는 점은?",
+                a: [
+                    { text: "내 감정을 존중해 주고 감싸안아 주는 포용력", s: { SOFT: 2 } },
+                    { text: "서로의 개인적 경계와 개인 시간을 인정해 주는 존중", s: { CHIC: 2 } },
+                    { text: "합리적이고 조화로운 해결책을 찾아가는 어른스러움", s: { MATURE: 2 } },
+                    { text: "웃으며 넘길 수 있는 여유와 유머 감각", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "자신의 이상형을 직관적으로 연상시키는 단어는?",
+                a: [
+                    { text: "다정함 / 온기 / 안정감", s: { SOFT: 2 } },
+                    { text: "시크함 / 트렌디 / 반전매력", s: { CHIC: 2 } },
+                    { text: "진중함 / 피지컬 / 성숙함", s: { MATURE: 2 } },
+                    { text: "청량함 / 활력 / 위트", s: { ENERGETIC: 2 } }
+                ]
+            },
+            {
+                q: "마지막 질문! 운명적인 인연을 만났을 때 느껴질 직감은?",
+                a: [
+                    { text: "'오랫동안 알고 지낸 것처럼 너무 편안하다'", s: { SOFT: 2 } },
+                    { text: "'숨이 턱 막힐 정도로 강력하게 끌린다'", s: { CHIC: 2 } },
+                    { text: "'이 사람이라면 미래를 함께 그려도 믿음직하겠다'", s: { MATURE: 2 } },
+                    { text: "'함께 있으면 매일매일이 너무 즐겁겠다'", s: { ENERGETIC: 2 } }
+                ]
+            }
+        ];
+    }
+
+    // 결과 데이터셋 (성별 x 나이 세분화)
+    const resultDB = {
+        F: {
+            '1020': {
+                SOFT: {
+                    title: "멍뭉미 다정 남친 '박보검 / 정해인' 타입",
+                    celeb: "대표 라인업: 박보검 (182cm) · 정해인 (178cm)",
+                    desc: "당신은 따뜻한 눈웃음과 멍뭉미 넘치는 순수한 인상에 마음이 쉽게 열립니다. 나를 세심하게 챙겨주고 함께 있을 때 편안함을 느끼게 해주는 다정한 연하/연상남 타입이 완벽한 이상형입니다.",
+                    img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80"
+                },
+                CHIC: {
+                    title: "트렌디 비주얼 '차은우 / 황민현' 타입",
+                    celeb: "대표 라인업: 차은우 (183cm) · 황민현 (181cm)",
+                    desc: "당신은 확실한 비율과 도도한 눈빛, 세련된 패션 감각을 갖춘 스타일에 강하게 끌립니다. 차가워 보이지만 나만을 바라볼 때 드러나는 달콤한 반전 매력의 냉미남 타입입니다.",
+                    img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80"
+                },
+                MATURE: {
+                    title: "피지컬 장인 '변우석 / 이도현' 타입",
+                    celeb: "대표 라인업: 변우석 (189cm) · 이도현 (182cm)",
+                    desc: "훤칠한 비율, 넓은 어깨, 자신의 일에 몰입할 때 풍겨오는 매너와 듬직함에 설레는 타입입니다. 청량함과 성숙한 어른미를 동시에 지닌 피지컬 장인이 이상형입니다.",
+                    img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80"
+                },
+                ENERGETIC: {
+                    title: "청량 비타민 '남주혁 / 덱스' 타입",
+                    celeb: "대표 라인업: 남주혁 (187cm) · 덱스 (179cm)",
+                    desc: "유쾌한 티키타카가 통하고 건강한 에너지를 지닌 분에게 매력을 느낍니다. 장난기 넘치는 눈빛 속에 단단함과 마초적 매력이 숨겨진 청량 에너자이저 타입입니다.",
+                    img: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=600&q=80"
+                }
+            },
+            '2030': {
+                SOFT: {
+                    title: "힐링 다정남 '임시완 / 최우식' 타입",
+                    celeb: "대표 라인업: 임시완 (175cm) · 최우식 (181cm)",
+                    desc: "지친 일상 속 내 편이 되어 따뜻하게 공감해 주는 잔잔하고 포근한 연인을 원합니다. 부드러운 인상 뒤에 진중함과 단단함을 겸비한 힐링 아이콘 스타일입니다.",
+                    img: "https://images.unsplash.com/photo-1480429370139-e0132c086e2a?auto=format&fit=crop&w=600&q=80"
+                },
+                CHIC: {
+                    title: "절제된 시크 아우라 '이수혁 / 주지훈' 타입",
+                    celeb: "대표 라인업: 이수혁 (184cm) · 주지훈 (187cm)",
+                    desc: "정돈된 아우라, 감각적인 스타일링, 독보적인 시크함에 깊은 매력을 느낍니다. 자신만의 철학이 확실하고 나에게만 깊은 애정을 쏟아주는 차도남 스타일입니다.",
+                    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80"
+                },
+                MATURE: {
+                    title: "어른미 듬직 '손석구 / 공유' 타입",
+                    celeb: "대표 라인업: 손석구 (178cm) · 공유 (184cm)",
+                    desc: "넓은 어깨, 신뢰감 주는 목소리, 현실적인 단단함을 안겨주는 진정한 어른 남자! 그윽한 분위기와 내면의 깊이가 어우러진 손석구/공유 타입이 이상형입니다.",
+                    img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80"
+                },
+                ENERGETIC: {
+                    title: "유쾌한 열정 '위하준 / 옥택연' 타입",
+                    celeb: "대표 라인업: 위하준 (180cm) · 옥택연 (185cm)",
+                    desc: "철저한 자기관리, 건강한 신체, 그리고 함께 있으면 항상 웃게 만드는 긍정적 에너지를 가진 남성분에게 끌립니다. 열정 넘치는 분위기 메이커 스타일입니다.",
+                    img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80"
+                }
+            }
         },
-        {
-            title: "2. 연인과의 데이트 중 더 설레는 코스는?",
-            options: [
-                { text: "테마파크, 액티비티, 핫한 맛집 탐방", type: "A", score: 2 },
-                { text: "조용한 카페, 드라이브, 영화관 데이트", type: "C", score: 2 }
-            ]
-        },
-        {
-            title: "3. 연인에게 가장 기대하는 바람직한 모습은?",
-            options: [
-                { text: "자기 일을 열정적으로 하고 배울 점이 있는 사람", type: "A", score: 2 },
-                { text: "내 말을 잘 들어주고 따뜻하게 공감해 주는 사람", type: "C", score: 2 }
-            ]
-        },
-        {
-            title: "4. 새로운 장소나 예기치 않은 상황에서의 행동은?",
-            options: [
-                { text: "먼저 앞장서서 리드하고 분위기를 주도하는 모습", type: "E", score: 2 },
-                { text: "차분하게 옆에서 배려해 주고 챙겨주는 모습", type: "C", score: 1 }
-            ]
+        M: {
+            '1020': {
+                SOFT: {
+                    title: "러블리 강아지상 '안유진 / 박보영' 타입",
+                    celeb: "대표 라인업: 안유진 (173cm) · 박보영 (158cm)",
+                    desc: "사랑스러운 눈웃음과 보기만 해도 미소가 지어지는 강아지상 여성에게 사로잡힙니다. 다정하고 긍정적인 태도로 나를 반겨주는 비타민 같은 연인이 이상형입니다.",
+                    img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80"
+                },
+                CHIC: {
+                    title: "도도한 세련미 '카리나 / 장원영' 타입",
+                    celeb: "대표 라인업: 카리나 (168cm) · 장원영 (173cm)",
+                    desc: "독보적인 비율과 이목구비, 트렌디한 분위기를 자랑하는 고양이상 여신 스타일을 선호합니다. 도도해 보이지만 나에게만 애교를 보여주는 반전 매력형입니다.",
+                    img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80"
+                },
+                MATURE: {
+                    title: "청순 우아 매력 '고윤정 / 신세경' 타입",
+                    celeb: "대표 라인업: 고윤정 (167cm) · 신세경 (164cm)",
+                    desc: "고전적 미모와 정돈된 분위기, 진중한 매력을 선호하시네요! 기품 있으면서도 사람을 편안하게 만드는 매력적인 비주얼의 여성분이 이상형입니다.",
+                    img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80"
+                },
+                ENERGETIC: {
+                    title: "상큼 청량 비타민 '윈터 / 최예나' 타입",
+                    celeb: "대표 라인업: 윈터 (164cm) · 최예나 (162cm)",
+                    desc: "함께 있으면 유쾌하고 웃음이 끊이지 않는 상큼한 텐션의 여성분에게 매력을 느낍니다. 밝고 톡톡 튀는 청량함이 삶의 활력이 되어줍니다.",
+                    img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=600&q=80"
+                }
+            },
+            '2030': {
+                SOFT: {
+                    title: "따스한 힐링 아이콘 '아이유 / 수지' 타입",
+                    celeb: "대표 라인업: 아이유 (162cm) · 수지 (168cm)",
+                    desc: "따뜻한 눈빛과 편안한 대화로 지친 일상을 위로해 주는 국민 첫사랑/힐링 타입이 이상형입니다. 다정다감하고 공감 능력이 뛰어난 분이 어울립니다.",
+                    img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80"
+                },
+                CHIC: {
+                    title: "세련된 걸크러시 '한소희 / 나나' 타입",
+                    celeb: "대표 라인업: 한소희 (165cm) · 나나 (171cm)",
+                    desc: "자신만의 색깔이 뚜렷하고 스타일리시하며 시크한 아우라를 풍기는 고양이상 패션 아이콘! 주관이 확실한 세련된 매력에 빠지는 타입입니다.",
+                    img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=600&q=80"
+                },
+                MATURE: {
+                    title: "지적 우아함 '김태리 / 신민아' 타입",
+                    celeb: "대표 라인업: 김태리 (166cm) · 신민아 (168cm)",
+                    desc: "자기 일에 프로페셔널하고 지적이면서도 웃을 때 사랑스러운 어른스러운 매력! 서로 발전적인 관계를 이어갈 수 있는 완성형 여성분이 이상형입니다.",
+                    img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80"
+                },
+                ENERGETIC: {
+                    title: "해피 바이러스 '혜리 / 이미주' 타입",
+                    celeb: "대표 라인업: 혜리 (167cm) · 이미주 (167cm)",
+                    desc: "털털하고 솔직해서 함께 있을 때 그 자체로 기분이 상쾌해지는 분위기 메이커! 나의 기분을 확실하게 밝혀줄 해피 바이러스 타입입니다.",
+                    img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80"
+                }
+            }
         }
-    ];
+    };
 
-    // 점수 측정용 데이터 (E: 외향, I: 내향, A: 활동/성장, C: 다정/편안)
-    let scores = { E: 0, I: 0, A: 0, C: 0 };
-    let currentQuestionIndex = 0;
+    let questionsList = [];
 
-    // 시작 함수
-    function startTest() {
-        scores = { E: 0, I: 0, A: 0, C: 0 };
-        currentQuestionIndex = 0;
-        
-        document.getElementById('startScreen').classList.remove('active');
-        document.getElementById('resultScreen').classList.remove('active');
-        document.getElementById('questionScreen').classList.add('active');
-        document.getElementById('progressBar').style.display = 'block';
-        
+    function startQuestions() {
+        scores = { SOFT: 0, CHIC: 0, MATURE: 0, ENERGETIC: 0 };
+        currentQ = 0;
+        questionsList = getQuestionList();
+
+        switchPage('step1', 'stepQuestions');
+        document.getElementById('progressWrapper').style.display = 'block';
         showQuestion();
     }
 
-    // 질문 표시 함수
     function showQuestion() {
-        const q = questions[currentQuestionIndex];
-        document.getElementById('questionTitle').innerText = q.title;
+        const q = questionsList[currentQ];
+        const num = currentQ + 1;
         
-        // 프로그레스 바 업데이트
-        const progressPercent = ((currentQuestionIndex + 1) / questions.length) * 100;
-        document.getElementById('progress').style.width = progressPercent + '%';
+        document.getElementById('qNum').innerText = `${num < 10 ? '0' + num : num} / ${questionsList.length}`;
+        document.getElementById('qTitle').innerText = q.q;
 
-        // 선택지 버튼 생성
-        const optionsContainer = document.getElementById('optionsContainer');
-        optionsContainer.innerHTML = '';
-        
-        q.options.forEach(option => {
-            const button = document.createElement('button');
-            button.className = 'btn';
-            button.innerText = option.text;
-            button.onclick = () => selectOption(option.type, option.score);
-            optionsContainer.appendChild(button);
+        const progressPercent = (num / questionsList.length) * 100;
+        document.getElementById('progressBar').style.width = `${progressPercent}%`;
+
+        const container = document.getElementById('optsContainer');
+        container.innerHTML = '';
+
+        q.a.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = opt.text;
+            btn.onclick = () => handleAnswer(opt.s);
+            container.appendChild(btn);
         });
     }
 
-    // 선택지 클릭 처리
-    function selectOption(type, score) {
-        scores[type] += score;
-        currentQuestionIndex++;
+    function handleAnswer(s) {
+        for (let k in s) {
+            scores[k] += s[k];
+        }
 
-        if (currentQuestionIndex < questions.length) {
+        currentQ++;
+        if (currentQ < questionsList.length) {
             showQuestion();
         } else {
-            showResult();
+            renderResult();
         }
     }
 
-    // 결과 출력 함수
-    function showResult() {
-        document.getElementById('questionScreen').classList.remove('active');
-        document.getElementById('progressBar').style.display = 'none';
-        document.getElementById('resultScreen').classList.add('active');
+    function renderResult() {
+        document.getElementById('progressWrapper').style.display = 'none';
+        switchPage('stepQuestions', 'stepResult');
 
-        const titleElem = document.getElementById('resultTitle');
-        const desc1Elem = document.getElementById('resultDesc1');
-        const desc2Elem = document.getElementById('resultDesc2');
-
-        // 점수에 따른 판정 로직
-        if (scores.E >= 3 && scores.A >= 2) {
-            titleElem.innerText = "✨ 열정적인 에너자이저 리더형";
-            desc1Elem.innerText = "• 에너지가 넘치고 추진력 있게 데이트를 리드하는 사람에게 커다란 매력을 느낍니다.";
-            desc2Elem.innerText = "• 함께 새로운 것을 경험하고 활동적인 인플루언서 스타일과 가장 잘 어울립니다.";
-        } else if (scores.C >= 3 && scores.I >= 2) {
-            titleElem.innerText = "✨ 다정다감 힐링 케어형";
-            desc1Elem.innerText = "• 세심하고 따뜻하며 항상 내 편이 되어주는 아늑한 사람에게 끌립니다.";
-            desc2Elem.innerText = "• 조용한 곳에서 둘만의 깊은 대화를 나누며 일상을 공유할 때 큰 행복을 느낍니다.";
-        } else if (scores.A >= 3) {
-            titleElem.innerText = "✨ 자기관리 철저한 갓생형";
-            desc1Elem.innerText = "• 자신의 목표가 뚜렷하고 열정적으로 삶을 살아가는 동기부여형 인재에게 매력을 느낍니다.";
-            desc2Elem.innerText = "• 서로의 성장을 응원하고 건강한 자극을 주는 서포터 관계를 선호합니다.";
-        } else {
-            titleElem.innerText = "✨ 티키타카 유쾌한 친구형";
-            desc1Elem.innerText = "• 유머 감각이 잘 맞고 함께 있으면 시간 가는 줄 모르는 편안한 사람에게 끌립니다.";
-            desc2Elem.innerText = "• 장난치듯 편안하게 지내며 소소한 행복을 나눌 수 있는 연애가 어울립니다.";
+        let topKey = 'SOFT';
+        let maxVal = -1;
+        for (let k in scores) {
+            if (scores[k] > maxVal) {
+                maxVal = scores[k];
+                topKey = k;
+            }
         }
+
+        const data = resultDB[userGender][userAge][topKey];
+
+        document.getElementById('resTitle').innerText = data.title;
+        document.getElementById('resCeleb').innerText = data.celeb;
+        document.getElementById('resDesc').innerText = data.desc;
+        document.getElementById('resImg').src = data.img;
     }
 
-    // 다시 시작
-    function restartTest() {
-        document.getElementById('resultScreen').classList.remove('active');
-        document.getElementById('startScreen').classList.add('active');
+    function resetTest() {
+        switchPage('stepResult', 'step1');
+    }
+
+    function switchPage(fromId, toId) {
+        const from = document.getElementById(fromId);
+        const to = document.getElementById(toId);
+
+        from.style.opacity = '0';
+        from.style.transform = 'translateY(12px)';
+
+        setTimeout(() => {
+            from.classList.remove('active');
+            to.classList.add('active');
+            setTimeout(() => {
+                to.style.opacity = '1';
+                to.style.transform = 'translateY(0)';
+            }, 50);
+        }, 350);
     }
 </script>
-
 </body>
 </html>
+    
+            
+            
+           
+
+        
+
+      
+       
+     
+         
+
